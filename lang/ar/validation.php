@@ -1,0 +1,48 @@
+<?php
+
+return [
+    'required' => 'حقل :attribute مطلوب.',
+    'present' => 'يجب إرسال حقل :attribute.',
+    'string' => 'يجب أن يكون :attribute نصاً.',
+    'email' => 'يجب أن يكون :attribute بريداً إلكترونياً صالحاً.',
+    'unique' => ':attribute مستخدم مسبقاً.',
+    'confirmed' => 'تأكيد :attribute غير مطابق.',
+    'in' => 'قيمة :attribute غير صالحة.',
+    'enum' => 'قيمة :attribute غير صالحة.',
+    'exists' => 'قيمة :attribute غير موجودة.',
+    'prohibited' => 'لا يسمح بإرسال حقل :attribute.',
+    'boolean' => 'يجب أن تكون قيمة :attribute صحيحة أو خاطئة.',
+    'regex' => 'صيغة :attribute غير صحيحة.',
+    'array' => 'يجب أن يكون :attribute قائمة.',
+    'integer' => 'يجب أن يكون :attribute عدداً صحيحاً.',
+    'distinct' => 'لا يسمح بتكرار :attribute.',
+    'different' => 'يجب أن يختلف :attribute عن :other.',
+    'min' => [
+        'string' => 'يجب ألا يقل :attribute عن :min أحرف.',
+        'array' => 'يجب ألا تقل عناصر :attribute عن :min.',
+        'numeric' => 'يجب ألا يقل :attribute عن :min.',
+    ],
+    'max' => [
+        'string' => 'يجب ألا يزيد :attribute عن :max حرفاً.',
+        'array' => 'يجب ألا تزيد عناصر :attribute عن :max.',
+        'numeric' => 'يجب ألا يزيد :attribute عن :max.',
+    ],
+    'password' => [
+        'mixed' => 'يجب أن تتضمن :attribute أحرفاً كبيرة وصغيرة.',
+        'numbers' => 'يجب أن تتضمن :attribute أرقاماً.',
+    ],
+    'attributes' => [
+        'name' => 'الاسم',
+        'email' => 'البريد الإلكتروني',
+        'password' => 'كلمة المرور',
+        'current_password' => 'كلمة المرور الحالية',
+        'phone' => 'الهاتف',
+        'roles' => 'الأدوار',
+        'permissions' => 'الصلاحيات',
+        'code' => 'رمز التأكيد',
+        'token' => 'رمز الاستعادة',
+        'preferred_locale' => 'اللغة',
+        'status' => 'الحالة',
+        'per_page' => 'عدد النتائج',
+    ],
+];
