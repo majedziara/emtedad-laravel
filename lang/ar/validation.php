@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'date' => 'يجب أن يكون :attribute تاريخاً صالحاً.',
+    'file' => 'يجب أن يكون :attribute ملفاً صالحاً.',
+    'image' => 'يجب أن يكون :attribute صورة صالحة.',
+    'mimes' => 'نوع :attribute غير مسموح. الأنواع المقبولة: :values.',
+    'mimetypes' => 'نوع :attribute غير مسموح.',
+    'dimensions' => 'أبعاد :attribute تتجاوز الحد المسموح.',
+    'date_format' => 'يجب أن يطابق :attribute الصيغة :format.',
+    'list' => 'يجب أن يكون :attribute قائمة متسلسلة.',
     'required' => 'حقل :attribute مطلوب.',
     'present' => 'يجب إرسال حقل :attribute.',
     'string' => 'يجب أن يكون :attribute نصاً.',
@@ -23,6 +31,7 @@ return [
         'numeric' => 'يجب ألا يقل :attribute عن :min.',
     ],
     'max' => [
+        'file' => 'يجب ألا يزيد حجم :attribute عن :max كيلوبايت.',
         'string' => 'يجب ألا يزيد :attribute عن :max حرفاً.',
         'array' => 'يجب ألا تزيد عناصر :attribute عن :max.',
         'numeric' => 'يجب ألا يزيد :attribute عن :max.',

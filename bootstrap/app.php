@@ -3,6 +3,7 @@
 use App\Http\Middleware\EnsureAccountIsActive;
 use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\SetApiLocale;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias(['active' => EnsureAccountIsActive::class, 'verified' => EnsureEmailIsVerified::class, 'role' => RoleMiddleware::class, 'permission' => PermissionMiddleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->render(function (UniqueConstraintViolationException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json(['success' => false, 'message' => __('content.conflict')], 409);
+            }
+        });
         $exceptions->shouldRenderJsonWhen(fn(Request $request, Throwable $e) => $request->is('api/*') || $request->expectsJson());
         $exceptions->respond(function (Response $response) {
             if (request()->is('api/*') && $response->getStatusCode() >= 400) {

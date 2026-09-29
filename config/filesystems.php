@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
@@ -12,9 +11,7 @@ return [
     | based disks are available to your application for file storage.
     |
     */
-
     'default' => env('FILESYSTEM_DISK', 'local'),
-
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -27,9 +24,14 @@ return [
     | Supported drivers: "local", "ftp", "sftp", "s3"
     |
     */
-
     'disks' => [
-
+        'emtedad_private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/emtedad'),
+            'visibility' => 'private',
+            'serve' => false,
+            'throw' => true,
+        ],
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
@@ -37,16 +39,14 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/') . '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
         ],
-
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -59,9 +59,7 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Symbolic Links
@@ -72,9 +70,5 @@ return [
     | the locations of the links and the values should be their targets.
     |
     */
-
-    'links' => [
-        public_path('storage') => storage_path('app/public'),
-    ],
-
+    'links' => [public_path('storage') => storage_path('app/public')],
 ];

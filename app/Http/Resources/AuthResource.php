@@ -9,11 +9,6 @@ class AuthResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return [
-            'user' => new UserResource($this->resource['user']),
-            'access_token' => $this->resource['access_token'],
-            'token_type' => 'Bearer',
-            'expires_at' => $this->resource['expires_at']->toISOString()
-        ];
+        return ['user' => new UserResource($this->resource['user']), 'access_token' => $this->resource['access_token'], 'token_type' => 'Bearer', 'expires_at' => $this->resource['expires_at']->toISOString()];
     }
 }
