@@ -10,14 +10,30 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\DonationController;
+use App\Http\Controllers\PayPalReturnController;
+use App\Http\Controllers\PayPalWebhookController;
 use App\Http\Controllers\Public\CatalogController;
 use App\Models\HumanitarianCase;
 use Illuminate\Support\Facades\Route;
 
 Route::model('case', HumanitarianCase::class);
-
+// Outside the visitor throttle and Sanctum group: authenticated by PayPal signature.
+Route::post('v1/webhooks/paypal', PayPalWebhookController::class)->name('paypal.webhook');
 Route::prefix('v1')->middleware('throttle:api')->group(function () {
-
+    Route::get('payments/paypal/return', [PayPalReturnController::class, 'returned'])->name('paypal.return');
+    Route::get('payments/paypal/cancel', [PayPalReturnController::class, 'cancelled'])->name('paypal.cancel');
+    Route::prefix('guest/donations')->name('guest.donations.')->middleware('throttle:checkout')->group(function () {
+        Route::post('paypal', [DonationController::class, 'storeGuest'])->name('store');
+        Route::get('{publicId}', [DonationController::class, 'showGuest'])->whereUuid('publicId')->name('show');
+        Route::post('{publicId}/paypal/capture', [DonationController::class, 'captureGuest'])->whereUuid('publicId')->name('capture');
+    });
+    Route::prefix('donations')->name('donations.')->middleware(['auth:sanctum', 'active', 'verified', 'throttle:checkout'])->group(function () {
+        Route::post('paypal', [DonationController::class, 'store'])->name('store');
+        Route::get('/', [DonationController::class, 'index'])->name('index');
+        Route::get('{publicId}', [DonationController::class, 'show'])->whereUuid('publicId')->name('show');
+        Route::post('{publicId}/paypal/capture', [DonationController::class, 'capture'])->whereUuid('publicId')->name('capture');
+    });
     Route::prefix('public')->name('public.')->group(function () {
         Route::get('categories', [CatalogController::class, 'categories'])->name('categories.index');
         Route::get('categories/{category}', [CatalogController::class, 'category'])->whereNumber('category')->name('categories.show');
@@ -28,7 +44,6 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
         Route::get('cases/{publicId}/cover', [CatalogController::class, 'cover'])->whereUuid('publicId')->name('cases.cover');
         Route::get('cases/{publicId}/media/{media}', [CatalogController::class, 'media'])->whereUuid('publicId')->whereNumber('media')->name('cases.media');
     });
-
     Route::prefix('auth')->group(function () {
         Route::post('register', [AuthController::class, 'register'])->middleware('throttle:auth-register');
         Route::post('login', [AuthController::class, 'login'])->middleware('throttle:auth-login');
@@ -45,8 +60,11 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
         });
     });
     Route::prefix('admin')->middleware(['auth:sanctum', 'active', 'verified'])->group(function () {
-
         Route::name('admin.')->group(function () {
+            Route::middleware('permission:' . PermissionEnum::DONATIONS_VIEW->value)->group(function () {
+                Route::get('donations', [DonationController::class, 'adminIndex'])->name('donations.index');
+                Route::get('donations/{publicId}', [DonationController::class, 'adminShow'])->whereUuid('publicId')->name('donations.show');
+            });
             Route::middleware('permission:' . PermissionEnum::CASES_VIEW->value . '|' . PermissionEnum::CATEGORIES_MANAGE->value)->group(function () {
                 Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
                 Route::get('categories/{category}', [CategoryController::class, 'show'])->whereNumber('category')->name('categories.show');
@@ -82,7 +100,6 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
             Route::delete('cases/{case}', [HumanitarianCaseController::class, 'destroy'])->whereNumber('case')->middleware('permission:' . PermissionEnum::CASES_ARCHIVE->value);
             Route::post('cases/{id}/restore', [HumanitarianCaseController::class, 'restore'])->whereNumber('id')->middleware('permission:' . PermissionEnum::CASES_ARCHIVE->value);
         });
-
         Route::get('access', [AuthController::class, 'me'])->middleware('permission:' . PermissionEnum::DASHBOARD_VIEW->value);
         Route::middleware(['role:' . RoleEnum::ADMIN->value, 'permission:' . PermissionEnum::USERS_MANAGE->value])->group(function () {
             Route::get('users', [UserController::class, 'index']);
