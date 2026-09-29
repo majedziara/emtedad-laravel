@@ -4,6 +4,8 @@ use App\Enum\PermissionEnum;
 use App\Enum\RoleEnum;
 use App\Http\Controllers\Admin\CaseMediaController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DonationReportController;
 use App\Http\Controllers\Admin\HumanitarianCaseController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -61,6 +63,16 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
     });
     Route::prefix('admin')->middleware(['auth:sanctum', 'active', 'verified'])->group(function () {
         Route::name('admin.')->group(function () {
+            Route::get('dashboard', [DashboardController::class, 'index'])
+                ->middleware('permission:' . PermissionEnum::DASHBOARD_VIEW->value)->name('dashboard');
+            Route::get('dashboard/donations', [DashboardController::class, 'donations'])
+                ->middleware(['permission:' . PermissionEnum::DASHBOARD_VIEW->value, 'permission:' . PermissionEnum::DONATIONS_VIEW->value])->name('dashboard.donations');
+            Route::prefix('reports')->name('reports.')->middleware(['permission:' . PermissionEnum::DONATIONS_VIEW->value, 'throttle:reports'])->group(function () {
+                Route::get('donations/export', [DonationReportController::class, 'export'])
+                    ->middleware(['permission:' . PermissionEnum::DONATIONS_EXPORT->value, 'throttle:report-exports'])->name('donations.export');
+                Route::get('donations', [DonationReportController::class, 'index'])->name('donations');
+                Route::get('cases', [DonationReportController::class, 'cases'])->name('cases');
+            });
             Route::middleware('permission:' . PermissionEnum::DONATIONS_VIEW->value)->group(function () {
                 Route::get('donations', [DonationController::class, 'adminIndex'])->name('donations.index');
                 Route::get('donations/{publicId}', [DonationController::class, 'adminShow'])->whereUuid('publicId')->name('donations.show');
