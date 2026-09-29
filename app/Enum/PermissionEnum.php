@@ -5,6 +5,9 @@ namespace App\Enum;
 enum PermissionEnum: string
 {
     case DASHBOARD_VIEW = 'dashboard.view';
+    case CATEGORIES_MANAGE = 'categories.manage';
+    case CASES_DOCUMENTS_VIEW = 'cases.documents.view';
+    case CASES_DOCUMENTS_MANAGE = 'cases.documents.manage';
     case CASES_VIEW = 'cases.view';
     case CASES_CREATE = 'cases.create';
     case CASES_UPDATE = 'cases.update';

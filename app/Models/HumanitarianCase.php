@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enum\CasePriorityEnum;
 use App\Enum\CaseStatusEnum;
 use App\Enum\CurrencyEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,6 +30,16 @@ class HumanitarianCase extends Model
         static::creating(function (self $model): void {
             $model->public_id ??= (string) Str::uuid();
         });
+    }
+
+    public const CONTENT_RELATIONS = ['translations', 'category.translations'];
+
+    public function scopeVisible(Builder $query): Builder
+    {
+        return $query->whereIn('status', [CaseStatusEnum::PUBLISHED->value, CaseStatusEnum::PAUSED->value, CaseStatusEnum::COMPLETED->value])
+            ->whereNotNull('published_at')->where('published_at', '<=', now())
+            ->where(fn(Builder $q) => $q->whereNull('starts_at')->orWhere('starts_at', '<=', now()))
+            ->whereHas('category', fn(Builder $q) => $q->where('is_active', true));
     }
 
     public function category(): BelongsTo
