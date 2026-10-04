@@ -4,6 +4,7 @@ use App\Exceptions\PayPalException;
 use App\Http\Middleware\EnsureAccountIsActive;
 use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\SetApiLocale;
+use App\Http\Middleware\VerifyFrontendClient;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))->withRouting(web: __DIR__ . '/../routes/web.php', api: __DIR__ . '/../routes/api.php', commands: __DIR__ . '/../routes/console.php', health: '/up')->withMiddleware(function (Middleware $middleware): void {
     $middleware->redirectGuestsTo(fn(Request $request) => $request->is('api/*') ? null : '/');
-    $middleware->api(prepend: [SetApiLocale::class]);
+    $middleware->api(prepend: [VerifyFrontendClient::class, SetApiLocale::class]);
     $middleware->alias([
         'active' => EnsureAccountIsActive::class,
         'verified' => EnsureEmailIsVerified::class,
