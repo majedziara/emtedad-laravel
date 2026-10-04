@@ -4,6 +4,7 @@ return [
     'permission_guard' => 'web',
     'locales' => ['ar', 'en'],
     'default_locale' => 'ar',
+    'frontend_proxy_secret' => env('FRONTEND_PROXY_SECRET'),
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
     'content' => [
         'disk' => 'emtedad_private',
