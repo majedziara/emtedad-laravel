@@ -1,0 +1,33 @@
+{
+  "settings": {
+    "contact_email": null,
+    "phone": null,
+    "facebook_url": null,
+    "instagram_url": null,
+    "youtube_url": null,
+    "linkedin_url": null,
+    "x_url": null,
+    "donations_enabled": false,
+    "display_currencies": [
+      "USD",
+      "ILS",
+      "EUR"
+    ]
+  },
+  "translations": [
+    {
+      "locale": "ar",
+      "organization_name": "جمعية امتداد الخيرية",
+      "address": "فلسطين — قطاع غزة",
+      "seo_title": "جمعية امتداد الخيرية | نساند الإنسان ونحفظ الأمل",
+      "seo_description": "جمعية أهلية فلسطينية تُعنى بالعمل الإنساني والتنموي وخدمة المجتمع، مع اهتمام بالتعليم والأطفال والأسر المتضررة في قطاع غزة."
+    },
+    {
+      "locale": "en",
+      "organization_name": "Emtedad Charity Association",
+      "address": "Gaza Strip, Palestine",
+      "seo_title": "Emtedad Charity Association | Supporting people, sustaining hope",
+      "seo_description": "A Palestinian civil society association supporting education, children, affected families and community life in the Gaza Strip."
+    }
+  ]
+}

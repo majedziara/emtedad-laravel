@@ -1,0 +1,298 @@
+[
+  {
+    "key": "home_hero",
+    "page": "home",
+    "sort_order": 10,
+    "is_active": true,
+    "asset": "education.png",
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "لأن كل إنسان يستحق فرصة.",
+        "subtitle": "نساند التعليم، ونقف إلى جانب الأسر، ونفتح معًا أبوابًا للأمل في غزة.",
+        "body": "امتدادٌ للعون، وللفرص التي تصنع فرقًا في حياة الناس. الصورة توضيحية مولّدة للمعاينة.",
+        "button_label": "استعرض الحالات",
+        "button_url": "/cases",
+        "items": []
+      },
+      {
+        "locale": "en",
+        "title": "Everyone deserves a chance.",
+        "subtitle": "Together, we support education, stand beside families and create room for hope in Gaza.",
+        "body": "Extending support and opportunities that matter in people’s lives. AI-generated image for preview.",
+        "button_label": "Explore cases",
+        "button_url": "/cases",
+        "items": []
+      }
+    ]
+  },
+  {
+    "key": "home_about",
+    "page": "home",
+    "sort_order": 20,
+    "is_active": true,
+    "asset": "community.png",
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "قريبون من الناس، ومن احتياجاتهم.",
+        "subtitle": "جمعية امتداد الخيرية، جمعية أهلية فلسطينية تعمل في قطاع غزة في المجالات الإنسانية والتنموية وخدمة المجتمع.",
+        "body": "نهتم بالتعليم والأطفال والأسر المتضررة، ونسعى إلى تقديم مساندة تراعي احتياجات الناس وتحفظ كرامتهم. نؤمن بأن التعاون والعمل المجتمعي يساعدان على بناء فرص أكثر استقرارًا. الصورة توضيحية مولّدة للمعاينة.",
+        "button_label": "تعرّف على امتداد",
+        "button_url": "/about",
+        "items": []
+      },
+      {
+        "locale": "en",
+        "title": "Close to people and their needs.",
+        "subtitle": "Emtedad Charity Association is a Palestinian civil society association working in humanitarian action, development and community service in the Gaza Strip.",
+        "body": "We focus on education, children and affected families, seeking to offer support shaped by people’s needs and dignity. Cooperation and community action help build more stable opportunities. AI-generated image for preview.",
+        "button_label": "About Emtedad",
+        "button_url": "/about",
+        "items": []
+      }
+    ]
+  },
+  {
+    "key": "about_intro",
+    "page": "about",
+    "sort_order": 10,
+    "is_active": true,
+    "asset": "community.png",
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "عن جمعية امتداد الخيرية",
+        "subtitle": "من الإنسان، ولأجله.",
+        "body": "تعمل جمعية امتداد الخيرية في قطاع غزة، مع حضور لفريقها في الضفة الغربية. تنطلق اهتماماتها من احتياجات المجتمع، وبخاصة التعليم والأطفال والأسر المتضررة.\n\nتسعى الجمعية إلى بناء تعاون عملي مع المؤسسات والمبادرات المجتمعية، بما يساعد على استمرار الخدمات وتوسيع فرص المساندة. الصورة توضيحية مولّدة للمعاينة.",
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      },
+      {
+        "locale": "en",
+        "title": "About Emtedad Charity Association",
+        "subtitle": "People at the heart of our work.",
+        "body": "Emtedad Charity Association works in the Gaza Strip, with team members also based in the West Bank. Its focus reflects community needs, particularly education, children and affected families.\n\nThe association seeks practical cooperation with institutions and community initiatives to support continuity of services and broaden opportunities for assistance. AI-generated image for preview.",
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      }
+    ]
+  },
+  {
+    "key": "about_mission",
+    "page": "about",
+    "sort_order": 20,
+    "is_active": true,
+    "asset": null,
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "رسالتنا",
+        "body": "مساندة الإنسان وتعزيز فرصه في التعلّم والحياة الكريمة، من خلال مبادرات إنسانية وتنموية تستجيب للاحتياجات وتحترم خصوصية الأفراد وكرامتهم.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      },
+      {
+        "locale": "en",
+        "title": "Our mission",
+        "body": "To support people and strengthen opportunities for learning and a dignified life through humanitarian and development initiatives that respond to needs and respect individual privacy and dignity.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      }
+    ]
+  },
+  {
+    "key": "about_approach",
+    "page": "about",
+    "sort_order": 30,
+    "is_active": true,
+    "asset": null,
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "كيف نعمل؟",
+        "body": "نبدأ بفهم الاحتياج، ثم نبحث عن المساندة المناسبة ونتابع التنفيذ بالتعاون مع الجهات ذات الصلة.",
+        "items": [
+          {
+            "title": "فهم الاحتياج",
+            "body": "الاستماع إلى المجتمع وتحديد الأولويات قبل تصميم المبادرات."
+          },
+          {
+            "title": "التعاون",
+            "body": "تنسيق الجهود مع المؤسسات والمبادرات المجتمعية."
+          },
+          {
+            "title": "المتابعة",
+            "body": "مراجعة سير الأنشطة وتحديث المعلومات المتاحة عنها."
+          }
+        ],
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null
+      },
+      {
+        "locale": "en",
+        "title": "How we work",
+        "body": "We start by understanding needs, identify suitable support and follow implementation in cooperation with relevant organizations.",
+        "items": [
+          {
+            "title": "Understand needs",
+            "body": "Listen to communities and identify priorities before designing initiatives."
+          },
+          {
+            "title": "Work together",
+            "body": "Coordinate with institutions and community initiatives."
+          },
+          {
+            "title": "Follow progress",
+            "body": "Review activities and update the information available about them."
+          }
+        ],
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null
+      }
+    ]
+  },
+  {
+    "key": "contact_intro",
+    "page": "contact",
+    "sort_order": 10,
+    "is_active": true,
+    "asset": null,
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "لنتواصل، ونبحث فرص المساندة.",
+        "body": "للاستفسار عن أعمال الجمعية أو مناقشة مبادرة أو تعاون، استخدم قنوات التواصل الرسمية الظاهرة في هذه الصفحة عند إضافتها.\n\nيرجى عدم إرسال وثائق شخصية أو تفاصيل حساسة عن المستفيدين في رسالة التواصل الأولى.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      },
+      {
+        "locale": "en",
+        "title": "Let’s connect and explore ways to help.",
+        "body": "For questions about the association or to discuss an initiative or partnership, use the official contact channels shown on this page once added.\n\nPlease avoid including personal documents or sensitive beneficiary information in your first message.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      }
+    ]
+  },
+  {
+    "key": "footer_note",
+    "page": "footer",
+    "sort_order": 10,
+    "is_active": true,
+    "asset": null,
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "امتداد للأمل",
+        "body": "جمعية أهلية فلسطينية تُعنى بالتعليم والمساندة الإنسانية وخدمة المجتمع.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      },
+      {
+        "locale": "en",
+        "title": "Extending hope",
+        "body": "A Palestinian civil society association focused on education, humanitarian support and community service.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      }
+    ]
+  },
+  {
+    "key": "footer_preview_notice",
+    "page": "footer",
+    "sort_order": 20,
+    "is_active": true,
+    "asset": null,
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "نسخة معاينة",
+        "body": "الحالات والمبالغ الواردة في هذه النسخة بيانات تجريبية، والصور المولّدة توضيحية ولا توثّق مستفيدين أو أنشطة فعلية. استقبال التبرعات متوقف أثناء تجهيز المحتوى.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      },
+      {
+        "locale": "en",
+        "title": "Preview version",
+        "body": "Cases and amounts in this version are sample data. Generated images are illustrative and do not document actual beneficiaries or activities. Donations are paused while content is being prepared.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      }
+    ]
+  },
+  {
+    "key": "privacy_policy",
+    "page": "privacy",
+    "sort_order": 10,
+    "is_active": false,
+    "asset": null,
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "سياسة الخصوصية — مسودة غير منشورة",
+        "body": "هذا القسم معدّ لإضافة سياسة الخصوصية المعتمدة للجمعية. قبل تفعيله، تُستكمل بيانات الجهة المسؤولة وقنوات التواصل، وفئات البيانات المطلوبة وأغراض استخدامها، والجهات التي تعالجها، ومدد الاحتفاظ بها وآلية طلب التصحيح أو الحذف.\n\nهذا النص تحريري مؤقت وليس سياسة خصوصية مكتملة.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      },
+      {
+        "locale": "en",
+        "title": "Privacy policy — unpublished draft",
+        "body": "This section is reserved for the association’s approved privacy policy. Before publication, complete the responsible organization and contact details, data categories and purposes, processing parties, retention periods and the process for requesting correction or deletion.\n\nThis is a temporary editorial draft, not a complete privacy policy.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      }
+    ]
+  },
+  {
+    "key": "terms_of_use",
+    "page": "terms",
+    "sort_order": 10,
+    "is_active": false,
+    "asset": null,
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "شروط الاستخدام والتبرع — مسودة غير منشورة",
+        "body": "هذا القسم معدّ للشروط التي تعتمدها الجمعية لاستخدام الموقع والتبرع. قبل تفعيله، تُستكمل قواعد تخصيص التبرعات والرسوم والعملات، والتعامل مع تعذّر تنفيذ حالة أو زيادة تمويلها، وسياسة الاسترداد وقناة الاستفسار.\n\nلا تمثّل الحالات التجريبية في نسخة المعاينة طلبات تبرع فعلية.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      },
+      {
+        "locale": "en",
+        "title": "Use and donation terms — unpublished draft",
+        "body": "This section is reserved for the association’s approved website and donation terms. Before publication, complete rules on donation allocation, fees and currencies, treatment of unfeasible or overfunded cases, refunds and inquiries.\n\nSample cases in the preview version are not actual donation requests.",
+        "subtitle": null,
+        "button_label": null,
+        "button_url": null,
+        "items": []
+      }
+    ]
+  }
+]
