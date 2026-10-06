@@ -11,9 +11,11 @@ use App\Http\Resources\Public\CategoryResource;
 use App\Http\Resources\Public\HumanitarianCaseResource;
 use App\Models\Category;
 use App\Models\HumanitarianCase;
+use App\Services\CaseFundingService;
 use App\Services\CategoryService;
 use App\Services\ContentFileService;
 use App\Services\HumanitarianCaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -51,7 +53,9 @@ class CatalogController extends ApiController
 
     public function bySlug(string $slug): JsonResponse
     {
-        $case = HumanitarianCase::visible()->with(HumanitarianCase::CONTENT_RELATIONS)->whereHas('translations', fn($q) => $q->where('locale', app()->getLocale())->where('slug', $slug))->firstOrFail();
+        $case = HumanitarianCase::visible()->with(HumanitarianCase::CONTENT_RELATIONS)->whereHas('translations', fn ($q) => $q->where('locale', app()->getLocale())->where('slug', $slug))->firstOrFail();
+
+        app(CaseFundingService::class)->load(new Collection([$case]));
 
         return $this->detail($case);
     }
@@ -74,7 +78,7 @@ class CatalogController extends ApiController
 
     private function detail(HumanitarianCase $case): JsonResponse
     {
-        $case->load(['media' => fn($q) => $q->where('visibility', MediaVisibilityEnum::PUBLIC->value)->where('type', MediaTypeEnum::IMAGE->value)->orderBy('sort_order')->orderBy('id')]);
+        $case->load(['media' => fn ($q) => $q->where('visibility', MediaVisibilityEnum::PUBLIC->value)->where('type', MediaTypeEnum::IMAGE->value)->orderBy('sort_order')->orderBy('id')]);
 
         return $this->success(new HumanitarianCaseResource($case));
     }

@@ -52,7 +52,7 @@ class DonationReportService
         $totals = (clone $query)->select('p.currency')->selectRaw($this->aggregateSql())
             ->selectRaw('COUNT(DISTINCT d.id) AS donation_count, COUNT(DISTINCT d.user_id) AS registered_donor_count')
             ->selectRaw('COUNT(DISTINCT CASE WHEN d.user_id IS NULL THEN d.id END) AS guest_donation_count')
-            ->selectRaw('COUNT(DISTINCT CASE WHEN ' . self::NET . ' > 0 THEN d.humanitarian_case_id END) AS supported_case_count')
+            ->selectRaw('COUNT(DISTINCT CASE WHEN '.self::NET.' > 0 THEN d.humanitarian_case_id END) AS supported_case_count')
             ->groupBy('p.currency')->get()->keyBy('currency');
 
         return [
@@ -114,7 +114,7 @@ class DonationReportService
         $this->withTitle($query);
         $result = $query->orderBy('a.currency')->orderByDesc('a.net_amount_minor')->orderBy('c.id')
             ->paginate($filters['per_page'] ?? config('reports.per_page'));
-        $result->through(fn($row) => [
+        $result->through(fn ($row) => [
             'case_public_id' => $row->case_public_id,
             'case_title' => $row->case_title,
             'case_status' => $row->case_status,
@@ -217,14 +217,31 @@ class DonationReportService
 
     private function confirmed(array $filters): Builder
     {
-        return $this->candidates($filters)->where('p.needs_review', false)
+        return $this->validateConfirmed($this->candidates($filters));
+    }
+
+    public function confirmedCasePayments(string $environment): Builder
+    {
+        return $this->validateConfirmed(DB::table('payments as p')
+            ->join('donations as d', 'd.id', '=', 'p.donation_id')
+            ->where('p.provider', PaymentProviderEnum::PAYPAL->value)
+            ->where('p.environment', $environment)
+            ->whereIn('p.status', self::CAPTURED_STATES)
+            ->whereNotNull('p.paid_at')
+            ->whereNotNull('p.provider_transaction_id')
+            ->where('p.provider_transaction_id', '<>', ''));
+    }
+
+    private function validateConfirmed(Builder $query): Builder
+    {
+        return $query->where('p.needs_review', false)
             ->whereColumn('p.currency', 'd.currency')->whereIn('p.currency', array_column(CurrencyEnum::cases(), 'value'))
             ->whereColumn('p.amount_minor', 'd.amount_minor')->where('p.amount_minor', '>', 0)
             ->where('p.refunded_amount_minor', '>=', 0)->whereColumn('p.refunded_amount_minor', '<=', 'p.amount_minor')
             ->where(function (Builder $q): void {
-                $q->where(fn(Builder $s) => $s->where('p.status', PaymentStatusEnum::COMPLETED->value)->where('p.refunded_amount_minor', 0))
-                    ->orWhere(fn(Builder $s) => $s->where('p.status', PaymentStatusEnum::PARTIALLY_REFUNDED->value)->where('p.refunded_amount_minor', '>', 0)->whereColumn('p.refunded_amount_minor', '<', 'p.amount_minor'))
-                    ->orWhere(fn(Builder $s) => $s->where('p.status', PaymentStatusEnum::REFUNDED->value)->whereColumn('p.refunded_amount_minor', 'p.amount_minor'))
+                $q->where(fn (Builder $s) => $s->where('p.status', PaymentStatusEnum::COMPLETED->value)->where('p.refunded_amount_minor', 0))
+                    ->orWhere(fn (Builder $s) => $s->where('p.status', PaymentStatusEnum::PARTIALLY_REFUNDED->value)->where('p.refunded_amount_minor', '>', 0)->whereColumn('p.refunded_amount_minor', '<', 'p.amount_minor'))
+                    ->orWhere(fn (Builder $s) => $s->where('p.status', PaymentStatusEnum::REFUNDED->value)->whereColumn('p.refunded_amount_minor', 'p.amount_minor'))
                     ->orWhere('p.status', PaymentStatusEnum::REVERSED->value);
             });
     }
@@ -249,7 +266,7 @@ class DonationReportService
             'p.refunded_amount_minor',
             'p.paid_at',
             'p.last_synced_at',
-        ])->selectRaw(self::REVERSED . ' AS reversed_amount_minor, ' . self::NET . ' AS net_amount_minor');
+        ])->selectRaw(self::REVERSED.' AS reversed_amount_minor, '.self::NET.' AS net_amount_minor');
         $this->withTitle($query);
 
         return $query;
@@ -266,9 +283,9 @@ class DonationReportService
     private function aggregateSql(): string
     {
         return 'COUNT(*) AS payment_count, COALESCE(SUM(p.amount_minor), 0) AS gross_amount_minor, '
-            . 'COALESCE(SUM(p.refunded_amount_minor), 0) AS refunded_amount_minor, '
-            . 'COALESCE(SUM(' . self::REVERSED . '), 0) AS reversed_amount_minor, '
-            . 'COALESCE(SUM(' . self::NET . '), 0) AS net_amount_minor';
+            .'COALESCE(SUM(p.refunded_amount_minor), 0) AS refunded_amount_minor, '
+            .'COALESCE(SUM('.self::REVERSED.'), 0) AS reversed_amount_minor, '
+            .'COALESCE(SUM('.self::NET.'), 0) AS net_amount_minor';
     }
 
     private function metrics(?object $row): array
@@ -300,6 +317,6 @@ class DonationReportService
         $value ??= '';
 
         // Quoting CSV fields alone does not prevent spreadsheet formula execution.
-        return preg_match('/^[\\s\\x{FEFF}]*[=+@\\-]/u', $value) || preg_match('/^[\\t\\r\\n]/', $value) ? "'" . $value : $value;
+        return preg_match('/^[\\s\\x{FEFF}]*[=+@\\-]/u', $value) || preg_match('/^[\\t\\r\\n]/', $value) ? "'".$value : $value;
     }
 }
