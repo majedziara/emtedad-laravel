@@ -9,6 +9,7 @@ use App\Models\HumanitarianCase;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ use Throwable;
 
 class HumanitarianCaseService
 {
-    public function __construct(private readonly ContentTranslationService $translations, private readonly ContentFileService $files) {}
+    public function __construct(private readonly ContentTranslationService $translations, private readonly ContentFileService $files, private readonly CaseFundingService $funding) {}
 
     public function index(array $filters, bool $public = false): LengthAwarePaginator
     {
@@ -46,7 +47,7 @@ class HumanitarianCaseService
                 if ($public) {
                     $q->whereIn('locale', [app()->getLocale(), config('emtedad.default_locale')]);
                 }
-                $q->where(fn($q) => $q->where('title', 'like', '%' . $filters['search'] . '%')->orWhere('summary', 'like', '%' . $filters['search'] . '%'));
+                $q->where(fn ($q) => $q->where('title', 'like', '%'.$filters['search'].'%')->orWhere('summary', 'like', '%'.$filters['search'].'%'));
             });
         }
         [$column, $direction] = match ($filters['sort'] ?? 'latest') {
@@ -60,7 +61,12 @@ class HumanitarianCaseService
             $query->orderBy('id');
         }
 
-        return $query->paginate($filters['per_page'] ?? 20);
+        $paginator = $query->paginate($filters['per_page'] ?? 20);
+        if ($public) {
+            $this->funding->load($paginator->getCollection());
+        }
+
+        return $paginator;
     }
 
     public function show(HumanitarianCase $case): HumanitarianCase
@@ -70,7 +76,10 @@ class HumanitarianCaseService
 
     public function publicCase(string $publicId): HumanitarianCase
     {
-        return HumanitarianCase::visible()->with(HumanitarianCase::CONTENT_RELATIONS)->where('public_id', $publicId)->firstOrFail();
+        $case = HumanitarianCase::visible()->with(HumanitarianCase::CONTENT_RELATIONS)->where('public_id', $publicId)->firstOrFail();
+        $this->funding->load(new Collection([$case]));
+
+        return $case;
     }
 
     public function ensureEditable(HumanitarianCase $case, User $actor): void
@@ -194,7 +203,7 @@ class HumanitarianCaseService
                     throw ValidationException::withMessages(['image' => __('content.cover_required')]);
                 }
                 $old = $locked->cover_image_path;
-                $new = $image ? $this->files->store($image, 'cases/' . $locked->public_id . '/cover') : null;
+                $new = $image ? $this->files->store($image, 'cases/'.$locked->public_id.'/cover') : null;
                 $locked->forceFill(['cover_image_path' => $new, 'updated_by' => $actor->id])->save();
 
                 return $this->show($locked);

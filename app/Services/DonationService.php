@@ -38,7 +38,7 @@ class DonationService
             'donor_phone' => $data['donor_phone'] ?? null,
         ];
         $fingerprint = hash('sha256', json_encode($normalized, JSON_THROW_ON_ERROR));
-        $lock = Cache::lock('donation:create:' . $key, 30);
+        $lock = Cache::lock('donation:create:'.$key, 30);
         if (! $lock->get()) {
             throw new PayPalException('CHECKOUT_BUSY', 409);
         }
@@ -87,6 +87,7 @@ class DonationService
 
     public function ensurePayable(HumanitarianCase $case): void
     {
+        abort_unless(app(WebsiteSettingsService::class)->acceptsDonations(), 422, __('payments.case_not_accepting'));
         $active = ! $case->trashed() && $case->status === CaseStatusEnum::PUBLISHED && $case->published_at && $case->published_at->lte(now()) && (! $case->starts_at || $case->starts_at->lte(now())) && (! $case->ends_at || $case->ends_at->isFuture()) && $case->category()->where('is_active', true)->exists();
         abort_unless($active, 422, __('payments.case_not_accepting'));
         abort_unless(in_array($case->currency->value, config('paypal.currencies'), true), 422, __('payments.unsupported_currency'));
@@ -116,7 +117,7 @@ class DonationService
             $query->where('status', $filters['status']);
         }
         if (isset($filters['case_public_id'])) {
-            $query->whereHas('humanitarianCase', fn($q) => $q->where('public_id', $filters['case_public_id']));
+            $query->whereHas('humanitarianCase', fn ($q) => $q->where('public_id', $filters['case_public_id']));
         }
 
         return $query->paginate($filters['per_page'] ?? 20);
@@ -131,7 +132,7 @@ class DonationService
             'purchase_units' => [[
                 'reference_id' => $donation->public_id,
                 'custom_id' => $donation->public_id,
-                'invoice_id' => 'EMT-' . $donation->public_id,
+                'invoice_id' => 'EMT-'.$donation->public_id,
                 'description' => 'Charitable donation — Emtedad Charity Association',
                 'payee' => ['merchant_id' => config('paypal.merchant_id')],
                 'amount' => $money + ['breakdown' => ['item_total' => $money]],
