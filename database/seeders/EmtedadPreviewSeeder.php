@@ -29,14 +29,15 @@ final class EmtedadPreviewSeeder extends Seeder
         );
         DB::transaction(function (): void {
             $marker = Setting::where('key', SeedData::VERSION)->lockForUpdate()->firstOrFail();
-            if (($marker->value['completed'] ?? false) === true) {
-                $this->command?->info('Already seeded. Dashboard edits are preserved.');
-
-                return;
-            }
             SeedData::$running = true;
             SeedData::$categories = [];
             try {
+                if (($marker->value['completed'] ?? false) === true) {
+                    $restored = SeedData::restoreMissingImages();
+                    $this->command?->info('Already seeded. Restored '.$restored.' missing seed images. Dashboard edits are preserved.');
+
+                    return;
+                }
                 $this->call([
                     WebsiteSettingsContentSeeder::class,
                     PartnersContentSeeder::class,

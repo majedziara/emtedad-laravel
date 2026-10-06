@@ -76,6 +76,34 @@ final class SeedData
         return $path;
     }
 
+    public static function restoreMissingImages(): int
+    {
+        self::guard();
+        $disk = Storage::disk(config('emtedad.content.disk'));
+        $restored = 0;
+        $groups = [
+            ['data' => 'content-sections', 'model' => ContentSection::class, 'column' => 'image_path', 'directory' => 'content', 'identifier' => 'key'],
+            ['data' => 'categories', 'model' => Category::class, 'column' => 'image_path', 'directory' => 'categories', 'identifier' => 'seed_key'],
+            ['data' => 'cases', 'model' => HumanitarianCase::class, 'column' => 'cover_image_path', 'directory' => 'cases', 'identifier' => 'public_id'],
+        ];
+        foreach ($groups as $group) {
+            foreach (self::read($group['data']) as $row) {
+                if (empty($row['asset'])) {
+                    continue;
+                }
+                $target = $group['directory'].'/'.$row[$group['identifier']].'.png';
+                $path = 'seed/emtedad-v1/'.$target;
+                if ($disk->exists($path) || ! $group['model']::query()->where($group['column'], $path)->exists()) {
+                    continue;
+                }
+                self::image($row['asset'], $target);
+                $restored++;
+            }
+        }
+
+        return $restored;
+    }
+
     public static function preflight(): void
     {
         foreach (['ar', 'en'] as $locale) {

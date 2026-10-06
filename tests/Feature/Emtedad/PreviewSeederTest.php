@@ -109,6 +109,71 @@ class PreviewSeederTest extends EmtedadTestCase
         $this->assertSame($marker, Setting::where('key', SeedData::VERSION)->firstOrFail()->getRawOriginal());
     }
 
+    public function test_repeat_seed_restores_lost_images_without_changing_database_content(): void
+    {
+        $this->seed(EmtedadPreviewSeeder::class);
+        $disk = Storage::disk('emtedad_private');
+        $hero = ContentSection::where('key', 'home_hero')->firstOrFail();
+        $hero->update(['key' => 'renamed_hero']);
+        $hero->translations()->where('locale', 'en')->update(['title' => 'Dashboard title']);
+        app(WebsiteSettingsService::class)->save(['settings' => ['donations_enabled' => true]]);
+        $heroData = $hero->fresh()->getRawOriginal();
+        $case = HumanitarianCase::firstOrFail();
+        $caseData = $case->getRawOriginal();
+        $marker = Setting::where('key', SeedData::VERSION)->firstOrFail()->getRawOriginal();
+        $paths = $disk->allFiles();
+        $disk->delete($paths);
+        $this->get('/api/v1/public/content/'.$hero->id.'/image')->assertNotFound();
+        $this->get('/api/v1/public/cases/'.$case->public_id.'/cover')->assertNotFound();
+
+        $this->seed(EmtedadPreviewSeeder::class);
+
+        $this->assertCount(13, $disk->allFiles());
+        foreach ($paths as $path) {
+            $disk->assertExists($path);
+        }
+        $this->assertSame(hash_file('sha256', resource_path('seeders/emtedad/assets/'.SeedData::read('content-sections')[0]['asset'])), hash('sha256', $disk->get($hero->image_path)));
+        $this->assertSame($heroData, $hero->fresh()->getRawOriginal());
+        $this->assertSame($caseData, $case->fresh()->getRawOriginal());
+        $this->assertSame($marker, Setting::where('key', SeedData::VERSION)->firstOrFail()->getRawOriginal());
+        $this->assertSame('Dashboard title', $hero->fresh()->translations()->where('locale', 'en')->value('title'));
+        $this->assertTrue(app(WebsiteSettingsService::class)->acceptsDonations());
+        $this->assertDatabaseCount('categories', 4);
+        $this->assertDatabaseCount('humanitarian_cases', 6);
+        $this->assertDatabaseCount('content_sections', 10);
+        $this->assertDatabaseCount('partners', 8);
+        $this->assertFalse(SeedData::$running);
+        $this->get('/api/v1/public/content/'.$hero->id.'/image')->assertOk()->assertHeader('Content-Type', 'image/png');
+        $this->get('/api/v1/public/cases/'.$case->public_id.'/cover')->assertOk()->assertHeader('Content-Type', 'image/png');
+    }
+
+    public function test_image_recovery_preserves_replacements_and_intentionally_removed_images(): void
+    {
+        $this->seed(EmtedadPreviewSeeder::class);
+        $disk = Storage::disk('emtedad_private');
+        $disk->delete($disk->allFiles());
+        $hero = ContentSection::where('key', 'home_hero')->firstOrFail();
+        $heroPath = $hero->image_path;
+        $hero->update(['image_path' => 'content/dashboard-upload.png']);
+        $category = Category::firstOrFail();
+        $categoryPath = $category->image_path;
+        $category->update(['image_path' => null]);
+        $deletedCase = HumanitarianCase::firstOrFail();
+        $deletedCover = $deletedCase->cover_image_path;
+        $deletedCase->delete();
+        $case = HumanitarianCase::firstOrFail();
+        $disk->put($case->cover_image_path, 'Dashboard replacement');
+
+        $this->seed(EmtedadPreviewSeeder::class);
+
+        $disk->assertMissing([$heroPath, $categoryPath, $deletedCover, 'content/dashboard-upload.png']);
+        $this->assertCount(10, $disk->allFiles());
+        $this->assertSame('Dashboard replacement', $disk->get($case->cover_image_path));
+        $this->assertSame('content/dashboard-upload.png', $hero->fresh()->image_path);
+        $this->assertNull($category->fresh()->image_path);
+        $this->assertTrue(HumanitarianCase::withTrashed()->findOrFail($deletedCase->id)->trashed());
+    }
+
     public function test_first_run_preserves_existing_contact_addresses_and_partner_identity(): void
     {
         $setting = Setting::factory()->create(['key' => config('website.settings_key'), 'value' => array_replace(config('website.defaults'), [
