@@ -6,6 +6,7 @@ use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
@@ -21,6 +22,7 @@ abstract class EmtedadTestCase extends TestCase
     {
         parent::setUp();
         Notification::fake();
+        Storage::fake('emtedad_images');
     }
 
     protected function user(string $role = 'donor', bool $verified = true): User

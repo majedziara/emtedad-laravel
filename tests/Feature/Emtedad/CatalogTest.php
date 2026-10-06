@@ -7,8 +7,10 @@ use App\Models\Category;
 use App\Models\Donation;
 use App\Models\HumanitarianCase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
+use RuntimeException;
 
 class CatalogTest extends EmtedadTestCase
 {
@@ -148,9 +150,9 @@ class CatalogTest extends EmtedadTestCase
         $category = $this->category();
         $this->upload('admin/categories/'.$category->id.'/image', $this->imageFile())->assertOk();
         $old = $category->fresh()->image_path;
-        Storage::disk('emtedad_private')->assertExists($old);
+        Storage::disk('emtedad_images')->assertExists($old);
         $this->upload('admin/categories/'.$category->id.'/image', $this->imageFile())->assertOk();
-        Storage::disk('emtedad_private')->assertMissing($old);
+        Storage::disk('emtedad_images')->assertMissing($old);
         $this->api('GET', 'public/categories/'.$category->id.'/image')->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff');
         $this->api('PATCH', 'admin/categories/'.$category->id, ['is_active' => false], $this->adminToken)->assertOk();
         $this->api('GET', 'public/categories/'.$category->id.'/image')->assertNotFound();
@@ -350,7 +352,68 @@ class CatalogTest extends EmtedadTestCase
         $path = CaseMedia::findOrFail($id)->path;
         $this->api('DELETE', 'admin/cases/'.$case->id.'/media/'.$id, [], $this->adminToken)->assertOk();
         Storage::disk('emtedad_private')->assertMissing($path);
+        Storage::disk('emtedad_images')->assertMissing($path);
         $this->assertDatabaseMissing('case_media', ['id' => $id]);
+    }
+
+    public function test_uploaded_cover_uses_the_public_image_disk(): void
+    {
+        $this->assertSame(public_path('uploads/emtedad'), config('filesystems.disks.emtedad_images.root'));
+        $case = $this->makeCase();
+        $this->publish($case);
+        Storage::disk('emtedad_images')->assertExists($case->fresh()->cover_image_path);
+        Storage::disk('emtedad_private')->assertMissing($case->fresh()->cover_image_path);
+        $this->api('GET', 'public/cases/'.$case->public_id.'/cover')->assertOk();
+    }
+
+    public function test_image_visibility_changes_move_files_between_public_and_private_disks(): void
+    {
+        $case = $this->makeCase();
+        $id = $this->upload('admin/cases/'.$case->id.'/media', $this->imageFile(), 'file', ['visibility' => 'public'])->assertCreated()->json('data.id');
+        $media = CaseMedia::findOrFail($id);
+        $this->assertSame('emtedad_images', $media->disk);
+        $bytes = Storage::disk('emtedad_images')->get($media->path);
+
+        $this->api('PATCH', 'admin/cases/'.$case->id.'/media/'.$id, ['visibility' => 'private'], $this->adminToken)->assertOk();
+
+        $this->assertSame('emtedad_private', $media->fresh()->disk);
+        Storage::disk('emtedad_images')->assertMissing($media->path);
+        $this->assertSame($bytes, Storage::disk('emtedad_private')->get($media->path));
+
+        $this->api('PATCH', 'admin/cases/'.$case->id.'/media/'.$id, ['visibility' => 'public'], $this->adminToken)->assertOk();
+
+        $this->assertSame('emtedad_images', $media->fresh()->disk);
+        Storage::disk('emtedad_private')->assertMissing($media->path);
+        $this->assertSame($bytes, Storage::disk('emtedad_images')->get($media->path));
+    }
+
+    public function test_private_image_uploads_remain_outside_public(): void
+    {
+        $case = $this->makeCase();
+        $id = $this->upload('admin/cases/'.$case->id.'/media', $this->imageFile(), 'file', ['visibility' => 'private'])->assertCreated()->json('data.id');
+        $media = CaseMedia::findOrFail($id);
+
+        $this->assertSame('emtedad_private', $media->disk);
+        Storage::disk('emtedad_images')->assertMissing($media->path);
+        Storage::disk('emtedad_private')->assertExists($media->path);
+        $this->api('GET', 'admin/cases/'.$case->id.'/media/'.$id.'/download', [], $this->adminToken)->assertOk();
+    }
+
+    public function test_failed_visibility_update_restores_original_file_and_disk(): void
+    {
+        $case = $this->makeCase();
+        $id = $this->upload('admin/cases/'.$case->id.'/media', $this->imageFile(), 'file', ['visibility' => 'public'])->assertCreated()->json('data.id');
+        $media = CaseMedia::findOrFail($id);
+        $bytes = Storage::disk('emtedad_images')->get($media->path);
+        Event::listen('eloquent.saving: '.CaseMedia::class, function (): void {
+            throw new RuntimeException('Attachment update failed.');
+        });
+
+        $this->api('PATCH', 'admin/cases/'.$case->id.'/media/'.$id, ['visibility' => 'private'], $this->adminToken)->assertStatus(500);
+
+        $this->assertDatabaseHas('case_media', ['id' => $id, 'visibility' => 'public', 'disk' => 'emtedad_images']);
+        $this->assertSame($bytes, Storage::disk('emtedad_images')->get($media->path));
+        Storage::disk('emtedad_private')->assertMissing($media->path);
     }
 
     public function test_upload_limits_and_svg_rejection(): void
@@ -390,7 +453,7 @@ class CatalogTest extends EmtedadTestCase
     {
         $case = $this->makeCase();
         CaseMedia::creating(function () {
-            throw new \RuntimeException('Simulated insert failure');
+            throw new RuntimeException('Simulated insert failure');
         });
         $this->upload('admin/cases/'.$case->id.'/media', $this->imageFile(), 'file', ['visibility' => 'public'])->assertStatus(500);
         $this->assertDatabaseCount('case_media', 0);

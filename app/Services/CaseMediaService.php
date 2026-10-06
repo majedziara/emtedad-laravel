@@ -12,7 +12,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
@@ -22,7 +24,7 @@ class CaseMediaService
 
     public function index(HumanitarianCase $case, User $actor): Collection
     {
-        return $case->media()->when(! $actor->can(PermissionEnum::CASES_DOCUMENTS_VIEW->value), fn($q) => $q->where('visibility', MediaVisibilityEnum::PUBLIC->value))->orderBy('sort_order')->orderBy('id')->get();
+        return $case->media()->when(! $actor->can(PermissionEnum::CASES_DOCUMENTS_VIEW->value), fn ($q) => $q->where('visibility', MediaVisibilityEnum::PUBLIC->value))->orderBy('sort_order')->orderBy('id')->get();
     }
 
     public function store(HumanitarianCase $case, array $data, UploadedFile $file, User $actor): CaseMedia
@@ -40,12 +42,13 @@ class CaseMediaService
                 if ($type === MediaTypeEnum::IMAGE && $file->getSize() > config('emtedad.content.image_max_kb') * 1024) {
                     throw ValidationException::withMessages(['file' => __('content.image_too_large')]);
                 }
-                $path = $this->files->store($file, 'cases/' . $locked->public_id . '/media');
+                $diskName = $visibility === MediaVisibilityEnum::PUBLIC ? config('emtedad.content.image_disk') : config('emtedad.content.disk');
+                $path = $this->files->store($file, 'cases/'.$locked->public_id.'/media', $diskName);
                 $media = $locked->media()->create([
                     'uploaded_by' => $actor->id,
                     'type' => $type,
                     'visibility' => $visibility,
-                    'disk' => config('emtedad.content.disk'),
+                    'disk' => $diskName,
                     'path' => $path,
                     'original_name' => basename(str_replace('\\', '/', $file->getClientOriginalName())),
                     'mime_type' => $file->getMimeType(),
@@ -64,22 +67,44 @@ class CaseMediaService
 
     public function update(HumanitarianCase $case, int $mediaId, array $data, User $actor): CaseMedia
     {
-        return DB::transaction(function () use ($case, $mediaId, $data, $actor) {
-            $locked = HumanitarianCase::whereKey($case->id)->lockForUpdate()->firstOrFail();
-            $media = $locked->media()->whereKey($mediaId)->lockForUpdate()->firstOrFail();
-            $next = isset($data['visibility']) ? MediaVisibilityEnum::from($data['visibility']) : $media->visibility;
-            $this->authorizeWrite($locked, $actor, $media->visibility);
-            if ($next !== $media->visibility) {
-                $this->authorizeWrite($locked, $actor, $next);
-            }
-            if ($next === MediaVisibilityEnum::PUBLIC && $media->type !== MediaTypeEnum::IMAGE) {
-                throw ValidationException::withMessages(['visibility' => __('content.public_images_only')]);
-            }
-            $media->fill(Arr::only($data, ['visibility', 'sort_order']))->save();
-            $locked->forceFill(['updated_by' => $actor->id])->save();
+        /** @var array{path: string, source: string, target: string, contents: string}|null $transfer */
+        $transfer = null;
+        try {
+            return DB::transaction(function () use ($case, $mediaId, $data, $actor, &$transfer) {
+                $locked = HumanitarianCase::whereKey($case->id)->lockForUpdate()->firstOrFail();
+                $media = $locked->media()->whereKey($mediaId)->lockForUpdate()->firstOrFail();
+                $next = isset($data['visibility']) ? MediaVisibilityEnum::from($data['visibility']) : $media->visibility;
+                $this->authorizeWrite($locked, $actor, $media->visibility);
+                if ($next !== $media->visibility) {
+                    $this->authorizeWrite($locked, $actor, $next);
+                }
+                if ($next === MediaVisibilityEnum::PUBLIC && $media->type !== MediaTypeEnum::IMAGE) {
+                    throw ValidationException::withMessages(['visibility' => __('content.public_images_only')]);
+                }
+                if ($next !== $media->visibility) {
+                    $target = $next === MediaVisibilityEnum::PUBLIC ? config('emtedad.content.image_disk') : config('emtedad.content.disk');
+                    if ($target !== $media->disk) {
+                        $source = Storage::disk($media->disk);
+                        $contents = $source->get($media->path);
+                        $transfer = ['path' => $media->path, 'source' => $media->disk, 'target' => $target, 'contents' => $contents];
+                        if (! Storage::disk($target)->put($media->path, $contents) || ! $source->delete($media->path)) {
+                            throw new RuntimeException('Cannot transfer attachment storage.');
+                        }
+                        $media->disk = $target;
+                    }
+                }
+                $media->fill(Arr::only($data, ['visibility', 'sort_order']))->save();
+                $locked->forceFill(['updated_by' => $actor->id])->save();
 
-            return $media;
-        });
+                return $media;
+            });
+        } catch (Throwable $e) {
+            if ($transfer !== null) {
+                Storage::disk($transfer['source'])->put($transfer['path'], $transfer['contents']);
+                $this->files->delete($transfer['path'], $transfer['target']);
+            }
+            throw $e;
+        }
     }
 
     public function delete(HumanitarianCase $case, int $mediaId, User $actor): void
@@ -105,7 +130,7 @@ class CaseMediaService
         }
 
         // A server-generated filename avoids reflecting an untrusted upload name in headers.
-        return $this->files->response($media->path, true, 'attachment-' . $media->id . '.' . pathinfo($media->path, PATHINFO_EXTENSION));
+        return $this->files->response($media->path, true, 'attachment-'.$media->id.'.'.pathinfo($media->path, PATHINFO_EXTENSION), $media->disk);
     }
 
     private function authorizeWrite(HumanitarianCase $case, User $actor, MediaVisibilityEnum $visibility): void
