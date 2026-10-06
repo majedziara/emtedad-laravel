@@ -88,5 +88,6 @@ class CaseUpdatesTest extends EmtedadTestCase
         $this->api('GET', $public)->assertNotFound();
         $this->api('DELETE', $this->base().'/'.$id, [], $this->adminToken)->assertOk();
         $this->assertCount(0, Storage::disk('emtedad_private')->allFiles());
+        $this->assertCount(0, Storage::disk('emtedad_images')->allFiles());
     }
 }

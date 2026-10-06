@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -226,7 +225,7 @@ class HumanitarianCaseService
         if (! $case->translations()->where('locale', config('emtedad.default_locale'))->exists()) {
             throw ValidationException::withMessages(['translations' => __('content.default_locale_required')]);
         }
-        if (! $case->cover_image_path || ! Storage::disk(config('emtedad.content.disk'))->exists($case->cover_image_path)) {
+        if (! $case->cover_image_path || ! $this->files->exists($case->cover_image_path)) {
             throw ValidationException::withMessages(['image' => __('content.cover_required')]);
         }
         if ($checkDeadline && $case->ends_at && $case->ends_at->lte(now())) {

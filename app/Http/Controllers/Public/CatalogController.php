@@ -73,7 +73,7 @@ class CatalogController extends ApiController
         $case = $this->cases->publicCase($publicId);
         $item = $case->media()->where('visibility', MediaVisibilityEnum::PUBLIC->value)->where('type', MediaTypeEnum::IMAGE->value)->findOrFail($media);
 
-        return $this->files->response($item->path);
+        return $this->files->response($item->path, diskName: $item->disk);
     }
 
     private function detail(HumanitarianCase $case): JsonResponse

@@ -8,6 +8,7 @@ return [
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
     'content' => [
         'disk' => 'emtedad_private',
+        'image_disk' => 'emtedad_images',
         'image_max_kb' => 5120,
         'document_max_kb' => 10240,
         'max_media_per_case' => 30,

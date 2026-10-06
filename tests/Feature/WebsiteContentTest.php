@@ -106,7 +106,7 @@ class WebsiteContentTest extends EmtedadTestCase
         $this->api('GET', 'public/settings/images/logo')->assertNotFound();
         $this->api('DELETE', 'admin/partners/'.$partner, [], $this->adminToken)->assertOk();
         $this->api('DELETE', 'admin/content-sections/'.$id, [], $this->adminToken)->assertOk();
-        $this->assertCount(1, Storage::disk('emtedad_private')->allFiles());
+        $this->assertCount(1, Storage::disk('emtedad_images')->allFiles());
     }
 
     public function test_partner_translation_falls_back_to_default_language_and_inactive_partners_stay_hidden(): void

@@ -9,6 +9,7 @@ use App\Models\ContentSection;
 use App\Models\HumanitarianCase;
 use App\Models\Partner;
 use App\Models\Setting;
+use App\Services\SeedImageService;
 use App\Services\WebsiteSettingsService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
@@ -61,7 +62,11 @@ final class SeedData
         self::guard();
         $disk = Storage::disk(config('emtedad.content.disk'));
         $path = 'seed/emtedad-v1/'.$target;
-        $bytes = file_get_contents(resource_path('seeders/emtedad/assets/'.$source));
+        $sourcePath = app(SeedImageService::class)->sourcePath($source);
+        if ($sourcePath === null) {
+            throw new RuntimeException('Missing bundled seed image: '.$source);
+        }
+        $bytes = file_get_contents($sourcePath);
         if ($bytes === false) {
             throw new RuntimeException('Cannot read image: '.$source);
         }
@@ -172,9 +177,9 @@ final class SeedData
                     throw new RuntimeException('Expected ar/en translations in '.$name.'.json');
                 }
                 if (! empty($row['asset'])) {
-                    $path = resource_path('seeders/emtedad/assets/'.$row['asset']);
-                    if (! is_file($path) || filesize($path) === 0) {
-                        throw new RuntimeException('Missing asset: '.$path);
+                    $path = app(SeedImageService::class)->sourcePath($row['asset']);
+                    if ($path === null || filesize($path) === 0) {
+                        throw new RuntimeException('Missing bundled seed image: '.$row['asset']);
                     }
                 }
             }

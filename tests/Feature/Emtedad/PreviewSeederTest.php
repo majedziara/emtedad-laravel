@@ -11,6 +11,7 @@ use App\Models\Partner;
 use App\Models\Setting;
 use App\Models\SettingTranslation;
 use App\Models\User;
+use App\Services\SeedImageService;
 use App\Services\WebsiteSettingsService;
 use Database\Seeders\Emtedad\CategoriesContentSeeder;
 use Database\Seeders\Emtedad\SeedData;
@@ -60,7 +61,7 @@ class PreviewSeederTest extends EmtedadTestCase
             $disk->assertExists($path);
             $this->assertStringStartsWith('seed/emtedad-v1/', $path);
         }
-        $this->assertSame(hash_file('sha256', resource_path('seeders/emtedad/assets/education.png')), hash('sha256', $disk->get('seed/emtedad-v1/categories/education.png')));
+        $this->assertSame(hash_file('sha256', public_path('images/emtedad/education.png')), hash('sha256', $disk->get('seed/emtedad-v1/categories/education.png')));
 
         foreach (['ar', 'en'] as $locale) {
             $this->getJson('/api/v1/public/home', ['Accept-Language' => $locale])->assertOk()
@@ -123,8 +124,8 @@ class PreviewSeederTest extends EmtedadTestCase
         $marker = Setting::where('key', SeedData::VERSION)->firstOrFail()->getRawOriginal();
         $paths = $disk->allFiles();
         $disk->delete($paths);
-        $this->get('/api/v1/public/content/'.$hero->id.'/image')->assertNotFound();
-        $this->get('/api/v1/public/cases/'.$case->public_id.'/cover')->assertNotFound();
+        $this->get('/api/v1/public/content/'.$hero->id.'/image')->assertOk()->assertHeader('Content-Type', 'image/png');
+        $this->get('/api/v1/public/cases/'.$case->public_id.'/cover')->assertOk()->assertHeader('Content-Type', 'image/png');
 
         $this->seed(EmtedadPreviewSeeder::class);
 
@@ -132,7 +133,7 @@ class PreviewSeederTest extends EmtedadTestCase
         foreach ($paths as $path) {
             $disk->assertExists($path);
         }
-        $this->assertSame(hash_file('sha256', resource_path('seeders/emtedad/assets/'.SeedData::read('content-sections')[0]['asset'])), hash('sha256', $disk->get($hero->image_path)));
+        $this->assertSame(hash_file('sha256', public_path('images/emtedad/'.SeedData::read('content-sections')[0]['asset'])), hash('sha256', $disk->get($hero->image_path)));
         $this->assertSame($heroData, $hero->fresh()->getRawOriginal());
         $this->assertSame($caseData, $case->fresh()->getRawOriginal());
         $this->assertSame($marker, Setting::where('key', SeedData::VERSION)->firstOrFail()->getRawOriginal());
@@ -145,6 +146,71 @@ class PreviewSeederTest extends EmtedadTestCase
         $this->assertFalse(SeedData::$running);
         $this->get('/api/v1/public/content/'.$hero->id.'/image')->assertOk()->assertHeader('Content-Type', 'image/png');
         $this->get('/api/v1/public/cases/'.$case->public_id.'/cover')->assertOk()->assertHeader('Content-Type', 'image/png');
+    }
+
+    public function test_bundled_images_survive_redeploy_without_reseeding_or_writing_storage(): void
+    {
+        $this->seed(EmtedadPreviewSeeder::class);
+        $disk = Storage::disk('emtedad_private');
+        $disk->delete($disk->allFiles());
+        $marker = Setting::where('key', SeedData::VERSION)->firstOrFail()->getRawOriginal();
+        $this->app->instance('env', 'production');
+        $urls = [];
+        foreach (Category::all() as $category) {
+            $urls['/api/v1/public/categories/'.$category->id.'/image'] = $category->image_path;
+        }
+        foreach (HumanitarianCase::all() as $case) {
+            $urls['/api/v1/public/cases/'.$case->public_id.'/cover'] = $case->cover_image_path;
+        }
+        foreach (ContentSection::whereNotNull('image_path')->where('is_active', true)->get() as $section) {
+            $urls['/api/v1/public/content/'.$section->id.'/image'] = $section->image_path;
+        }
+        $this->assertCount(13, $urls);
+        foreach ($urls as $url => $path) {
+            $response = $this->get($url)->assertOk()->assertHeader('Content-Type', 'image/png');
+            $source = app(SeedImageService::class)->path($path);
+            $this->assertNotNull($source);
+            $this->assertSame(hash_file('sha256', $source), hash('sha256', $response->streamedContent()));
+        }
+        $this->assertSame([], $disk->allFiles());
+        $this->assertSame($marker, Setting::where('key', SeedData::VERSION)->firstOrFail()->getRawOriginal());
+        $this->assertDatabaseCount('humanitarian_cases', 6);
+        $this->assertDatabaseCount('donations', 0);
+    }
+
+    public function test_bundled_images_preserve_custom_uploads_removals_and_public_visibility(): void
+    {
+        $this->seed(EmtedadPreviewSeeder::class);
+        $disk = Storage::disk('emtedad_private');
+        $disk->delete($disk->allFiles());
+        $hero = ContentSection::where('key', 'home_hero')->firstOrFail();
+        $disk->put($hero->image_path, 'Dashboard replacement');
+        $this->get('/api/v1/public/content/'.$hero->id.'/image')->assertOk()
+            ->assertStreamedContent('Dashboard replacement');
+        $hero->update(['image_path' => 'content/dashboard-upload.png']);
+        $this->get('/api/v1/public/content/'.$hero->id.'/image')->assertNotFound();
+        $category = Category::firstOrFail();
+        $category->update(['image_path' => null]);
+        $this->get('/api/v1/public/categories/'.$category->id.'/image')->assertNotFound();
+        $case = HumanitarianCase::firstOrFail();
+        $case->update(['status' => 'archived']);
+        $this->get('/api/v1/public/cases/'.$case->public_id.'/cover')->assertNotFound();
+        $this->assertNull(app(SeedImageService::class)->path('seed/emtedad-v1/../../.env'));
+    }
+
+    public function test_seeded_case_can_be_published_after_storage_loss(): void
+    {
+        $this->seed(EmtedadPreviewSeeder::class);
+        $disk = Storage::disk('emtedad_private');
+        $disk->delete($disk->allFiles());
+        $case = HumanitarianCase::firstOrFail();
+        $case->update(['status' => 'draft', 'published_at' => null]);
+        $token = $this->token($this->user('admin'));
+
+        $this->api('PATCH', 'admin/cases/'.$case->id.'/status', ['status' => 'published'], $token)->assertOk();
+
+        $this->get('/api/v1/public/cases/'.$case->public_id.'/cover')->assertOk()->assertHeader('Content-Type', 'image/png');
+        $this->assertSame([], $disk->allFiles());
     }
 
     public function test_image_recovery_preserves_replacements_and_intentionally_removed_images(): void

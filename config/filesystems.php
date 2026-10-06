@@ -25,6 +25,13 @@ return [
     |
     */
     'disks' => [
+        'emtedad_images' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/emtedad'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/uploads/emtedad',
+            'visibility' => 'public',
+            'throw' => true,
+        ],
         'emtedad_private' => [
             'driver' => 'local',
             'root' => storage_path('app/emtedad'),
@@ -42,7 +49,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/') . '/storage',
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
