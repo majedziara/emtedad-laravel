@@ -1,0 +1,146 @@
+[
+  {
+    "seed_key": "teachers-creativity",
+    "website_url": null,
+    "is_active": false,
+    "sort_order": 10,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "جمعية إبداع المعلم",
+        "description": "تعاون في دعم التعليم والمبادرات الموجهة للأطفال والمعلمين."
+      },
+      {
+        "locale": "en",
+        "name": "Association of the Teacher’s Creativity",
+        "description": "Cooperation supporting education and initiatives for children and teachers."
+      }
+    ]
+  },
+  {
+    "seed_key": "nabd-alsalam",
+    "website_url": null,
+    "is_active": false,
+    "sort_order": 20,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "جمعية نبض السلام للصحة النفسية والمجتمعية",
+        "description": "تعاون في الأنشطة المجتمعية والدعم النفسي والاجتماعي."
+      },
+      {
+        "locale": "en",
+        "name": "Nabd Al-Salam Association for Mental and Community Health",
+        "description": "Cooperation in community activities and psychosocial support."
+      }
+    ]
+  },
+  {
+    "seed_key": "refugees-committee",
+    "website_url": null,
+    "is_active": false,
+    "sort_order": 30,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "اللجنة الشعبية للاجئين",
+        "description": "تنسيق مجتمعي ومساندة المبادرات الموجهة للأسر المتضررة."
+      },
+      {
+        "locale": "en",
+        "name": "Popular Committee for Refugees",
+        "description": "Community coordination and support for initiatives serving affected families."
+      }
+    ]
+  },
+  {
+    "seed_key": "bader",
+    "website_url": null,
+    "is_active": false,
+    "sort_order": 40,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "جمعية بادر الإنسانية",
+        "description": "تعاون في المبادرات الإنسانية وخدمة المجتمع."
+      },
+      {
+        "locale": "en",
+        "name": "Bader Humanitarian Association",
+        "description": "Cooperation in humanitarian initiatives and community service."
+      }
+    ]
+  },
+  {
+    "seed_key": "womens-union",
+    "website_url": null,
+    "is_active": false,
+    "sort_order": 50,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "جمعية الاتحاد النسائي العربي – البيرة",
+        "description": "تعاون مجتمعي في المبادرات الداعمة للنساء والأسر."
+      },
+      {
+        "locale": "en",
+        "name": "Arab Women’s Union Association – Al-Bireh",
+        "description": "Community cooperation on initiatives supporting women and families."
+      }
+    ]
+  },
+  {
+    "seed_key": "education-ministry",
+    "website_url": null,
+    "is_active": false,
+    "sort_order": 60,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "وزارة التربية والتعليم – غزة",
+        "description": "تعاون في أنشطة ومبادرات تعليمية."
+      },
+      {
+        "locale": "en",
+        "name": "Ministry of Education – Gaza",
+        "description": "Cooperation in educational activities and initiatives."
+      }
+    ]
+  },
+  {
+    "seed_key": "aaup",
+    "website_url": null,
+    "is_active": false,
+    "sort_order": 70,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "الجامعة العربية الأمريكية",
+        "description": "تعاون في المبادرات التعليمية والمجتمعية."
+      },
+      {
+        "locale": "en",
+        "name": "Arab American University",
+        "description": "Cooperation in educational and community initiatives."
+      }
+    ]
+  },
+  {
+    "seed_key": "taallam",
+    "website_url": null,
+    "is_active": false,
+    "sort_order": 80,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "مدرسة تعلّم",
+        "description": "تعاون لدعم استمرارية التعليم ومساندة الكادر التعليمي."
+      },
+      {
+        "locale": "en",
+        "name": "Ta’allam School",
+        "description": "Cooperation supporting continuity of learning and teaching staff."
+      }
+    ]
+  }
+]

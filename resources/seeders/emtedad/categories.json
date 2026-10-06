@@ -1,0 +1,82 @@
+[
+  {
+    "seed_key": "education",
+    "asset": "education.png",
+    "is_active": true,
+    "sort_order": 10,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "التعليم",
+        "slug": "education",
+        "description": "مساندة فرص التعلّم وتوفير الأدوات والبيئات التعليمية المناسبة للأطفال."
+      },
+      {
+        "locale": "en",
+        "name": "Education",
+        "slug": "education",
+        "description": "Supporting learning opportunities, educational supplies and suitable spaces for children."
+      }
+    ]
+  },
+  {
+    "seed_key": "food-support",
+    "asset": "food-support.png",
+    "is_active": true,
+    "sort_order": 20,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "المساندة الغذائية",
+        "slug": "food-support",
+        "description": "مبادرات لتوفير الاحتياجات الغذائية الأساسية للأسر المتضررة."
+      },
+      {
+        "locale": "en",
+        "name": "Food support",
+        "slug": "food-support",
+        "description": "Initiatives addressing the essential food needs of affected families."
+      }
+    ]
+  },
+  {
+    "seed_key": "hygiene",
+    "asset": "hygiene.png",
+    "is_active": true,
+    "sort_order": 30,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "النظافة والاحتياجات الأساسية",
+        "slug": "hygiene",
+        "description": "مساندة الأسر بمستلزمات النظافة والعناية الشخصية والاحتياجات اليومية."
+      },
+      {
+        "locale": "en",
+        "name": "Hygiene and essentials",
+        "slug": "hygiene",
+        "description": "Supporting families with hygiene, personal care and daily essentials."
+      }
+    ]
+  },
+  {
+    "seed_key": "community",
+    "asset": "community.png",
+    "is_active": true,
+    "sort_order": 40,
+    "translations": [
+      {
+        "locale": "ar",
+        "name": "الدعم المجتمعي",
+        "slug": "community",
+        "description": "أنشطة مجتمعية ومساحات للتواصل والتعلّم والمساندة المتبادلة."
+      },
+      {
+        "locale": "en",
+        "name": "Community support",
+        "slug": "community",
+        "description": "Community activities and spaces for connection, learning and mutual support."
+      }
+    ]
+  }
+]

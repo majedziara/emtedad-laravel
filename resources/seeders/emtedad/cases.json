@@ -1,0 +1,206 @@
+[
+  {
+    "seed_key": "learning-kits",
+    "public_id": "43f4ed20-2e5e-4ca1-913a-000000000001",
+    "category_seed_key": "education",
+    "beneficiaries_count": 40,
+    "country_code": "PS",
+    "target_amount_minor": 240000,
+    "currency": "USD",
+    "priority": "normal",
+    "is_featured": true,
+    "asset": "education.png",
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "حقيبة تعلّم لكل طفل — نموذج تجريبي",
+        "slug": "demo-learning-kits",
+        "summary": "توفير دفاتر وأقلام ومواد تعليمية مساندة لأربعين طفلًا. بيانات توضيحية.",
+        "story": "حالة تجريبية للمعاينة: الأشخاص والاحتياجات والمبالغ المذكورة توضيحية، والصورة مولّدة ولا تمثّل مستفيدين حقيقيين. ليست دعوة تبرع فعلية.\n\nتتيح الأدوات الأساسية للطفل المشاركة في أنشطة القراءة والكتابة والحساب. يتضمن هذا المثال تجهيز أربعين حقيبة تعليمية مناسبة للفئة العمرية، مع مواد تُستخدم خلال الأنشطة.\n\nتوزيع الميزانية التقديري\n40 حقيبة × 50 دولارًا = 2,000 دولار\nالتجهيز والنقل: 400 دولار\n\nالمجموع: 2400 دولار أمريكي.\n\nتُستبدل هذه البيانات بالاحتياجات والميزانية المعتمدة قبل النشر الفعلي.",
+        "location": "قطاع غزة — موقع توضيحي",
+        "meta_title": "حقيبة تعلّم لكل طفل | معاينة امتداد",
+        "meta_description": "توفير دفاتر وأقلام ومواد تعليمية مساندة لأربعين طفلًا. حالة تجريبية للمعاينة."
+      },
+      {
+        "locale": "en",
+        "title": "Learning kits for children — demo",
+        "slug": "demo-learning-kits",
+        "summary": "Notebooks, pencils and supporting learning materials for forty children. Illustrative data.",
+        "story": "Demo case for preview: people, needs and amounts are illustrative. The generated image does not depict actual beneficiaries. This is not a real donation request.\n\nBasic supplies help children take part in reading, writing and numeracy activities. This example covers forty age-appropriate learning kits with materials for activities.\n\nIllustrative budget\n40 kits × USD 50 = USD 2,000\nPreparation and transport: USD 400\n\nTotal: USD 2400.\n\nReplace this content with approved needs and budget before actual publication.",
+        "location": "Gaza Strip — illustrative location",
+        "meta_title": "Learning kits for children | Emtedad preview",
+        "meta_description": "Notebooks, pencils and supporting learning materials for forty children. Demo case for preview."
+      }
+    ]
+  },
+  {
+    "seed_key": "food-parcels",
+    "public_id": "43f4ed20-2e5e-4ca1-913a-000000000002",
+    "category_seed_key": "food-support",
+    "beneficiaries_count": 100,
+    "country_code": "PS",
+    "target_amount_minor": 350000,
+    "currency": "USD",
+    "priority": "urgent",
+    "is_featured": true,
+    "asset": "food-support.png",
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "مساندة غذائية لأسر متضررة — نموذج تجريبي",
+        "slug": "demo-food-parcels",
+        "summary": "نموذج لتجهيز عشرين طردًا غذائيًا للأسر، بمتوسط خمسة أفراد للأسرة. بيانات توضيحية.",
+        "story": "حالة تجريبية للمعاينة: الأشخاص والاحتياجات والمبالغ المذكورة توضيحية، والصورة مولّدة ولا تمثّل مستفيدين حقيقيين. ليست دعوة تبرع فعلية.\n\nيتضمن هذا المثال مواد غذائية أساسية قابلة للتخزين. تُحدّد مكونات الطرد وفق الاحتياجات والتوافر، مع مراعاة ملاءمة المواد وسهولة نقلها وتوزيعها.\n\nتوزيع الميزانية التقديري\n20 طردًا × 150 دولارًا = 3,000 دولار\nالتجهيز والنقل: 500 دولار\n\nالمجموع: 3500 دولار أمريكي.\n\nتُستبدل هذه البيانات بالاحتياجات والميزانية المعتمدة قبل النشر الفعلي.",
+        "location": "قطاع غزة — موقع توضيحي",
+        "meta_title": "مساندة غذائية لأسر متضررة | معاينة امتداد",
+        "meta_description": "نموذج لتجهيز عشرين طردًا غذائيًا للأسر، بمتوسط خمسة أفراد للأسرة. حالة تجريبية للمعاينة."
+      },
+      {
+        "locale": "en",
+        "title": "Food parcels for affected families — demo",
+        "slug": "demo-food-parcels",
+        "summary": "A sample plan for twenty family food parcels, assuming five people per family. Illustrative data.",
+        "story": "Demo case for preview: people, needs and amounts are illustrative. The generated image does not depict actual beneficiaries. This is not a real donation request.\n\nThis example includes essential shelf-stable foods. Parcel contents would reflect needs and availability, taking suitability and practical distribution into account.\n\nIllustrative budget\n20 parcels × USD 150 = USD 3,000\nPreparation and transport: USD 500\n\nTotal: USD 3500.\n\nReplace this content with approved needs and budget before actual publication.",
+        "location": "Gaza Strip — illustrative location",
+        "meta_title": "Food parcels for affected families | Emtedad preview",
+        "meta_description": "A sample plan for twenty family food parcels, assuming five people per family. Demo case for preview."
+      }
+    ]
+  },
+  {
+    "seed_key": "family-hygiene",
+    "public_id": "43f4ed20-2e5e-4ca1-913a-000000000003",
+    "category_seed_key": "hygiene",
+    "beneficiaries_count": 125,
+    "country_code": "PS",
+    "target_amount_minor": 225000,
+    "currency": "USD",
+    "priority": "normal",
+    "is_featured": true,
+    "asset": "hygiene.png",
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "مستلزمات نظافة للأسر — نموذج تجريبي",
+        "slug": "demo-family-hygiene",
+        "summary": "خمس وعشرون حقيبة نظافة أسرية ضمن خطة مساندة تجريبية. بيانات توضيحية.",
+        "story": "حالة تجريبية للمعاينة: الأشخاص والاحتياجات والمبالغ المذكورة توضيحية، والصورة مولّدة ولا تمثّل مستفيدين حقيقيين. ليست دعوة تبرع فعلية.\n\nيشمل المثال مواد للعناية الشخصية والنظافة اليومية، مثل الصابون والمناشف وفرش الأسنان. تُراجع المكونات والكميات بما يلائم حجم الأسرة والاحتياج قبل أي تنفيذ فعلي.\n\nتوزيع الميزانية التقديري\n25 حقيبة × 75 دولارًا = 1,875 دولارًا\nالتجهيز والنقل: 375 دولارًا\n\nالمجموع: 2250 دولار أمريكي.\n\nتُستبدل هذه البيانات بالاحتياجات والميزانية المعتمدة قبل النشر الفعلي.",
+        "location": "قطاع غزة — موقع توضيحي",
+        "meta_title": "مستلزمات نظافة للأسر | معاينة امتداد",
+        "meta_description": "خمس وعشرون حقيبة نظافة أسرية ضمن خطة مساندة تجريبية. حالة تجريبية للمعاينة."
+      },
+      {
+        "locale": "en",
+        "title": "Household hygiene essentials — demo",
+        "slug": "demo-family-hygiene",
+        "summary": "Twenty-five family hygiene kits in an illustrative support plan. Illustrative data.",
+        "story": "Demo case for preview: people, needs and amounts are illustrative. The generated image does not depict actual beneficiaries. This is not a real donation request.\n\nThis example includes personal care and daily hygiene supplies such as soap, towels and toothbrushes. Contents and quantities would be reviewed against family size and needs before actual implementation.\n\nIllustrative budget\n25 kits × USD 75 = USD 1,875\nPreparation and transport: USD 375\n\nTotal: USD 2250.\n\nReplace this content with approved needs and budget before actual publication.",
+        "location": "Gaza Strip — illustrative location",
+        "meta_title": "Household hygiene essentials | Emtedad preview",
+        "meta_description": "Twenty-five family hygiene kits in an illustrative support plan. Demo case for preview."
+      }
+    ]
+  },
+  {
+    "seed_key": "learning-space",
+    "public_id": "43f4ed20-2e5e-4ca1-913a-000000000004",
+    "category_seed_key": "education",
+    "beneficiaries_count": 60,
+    "country_code": "PS",
+    "target_amount_minor": 480000,
+    "currency": "USD",
+    "priority": "normal",
+    "is_featured": true,
+    "asset": "education.png",
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "مساحة تعلّم أكثر استعدادًا — نموذج تجريبي",
+        "slug": "demo-learning-space",
+        "summary": "تجهيز تعليمي مبسّط لمساحة تستقبل الأطفال على مجموعات. بيانات توضيحية.",
+        "story": "حالة تجريبية للمعاينة: الأشخاص والاحتياجات والمبالغ المذكورة توضيحية، والصورة مولّدة ولا تمثّل مستفيدين حقيقيين. ليست دعوة تبرع فعلية.\n\nيوضح هذا المثال احتياجات مساحة تعليمية صغيرة: طاولات ومقاعد مناسبة، وسائل تعليمية، وتجهيزات تنظيم وحفظ للمواد. عدد المستفيدين تقديري لغرض تجربة العرض فقط.\n\nتوزيع الميزانية التقديري\nالأثاث: 2,400 دولار\nالوسائل التعليمية: 1,200 دولار\nالتجهيز والنقل: 1,200 دولار\n\nالمجموع: 4800 دولار أمريكي.\n\nتُستبدل هذه البيانات بالاحتياجات والميزانية المعتمدة قبل النشر الفعلي.",
+        "location": "قطاع غزة — موقع توضيحي",
+        "meta_title": "مساحة تعلّم أكثر استعدادًا | معاينة امتداد",
+        "meta_description": "تجهيز تعليمي مبسّط لمساحة تستقبل الأطفال على مجموعات. حالة تجريبية للمعاينة."
+      },
+      {
+        "locale": "en",
+        "title": "Equipping a learning space — demo",
+        "slug": "demo-learning-space",
+        "summary": "Basic equipment for a learning space welcoming children in groups. Illustrative data.",
+        "story": "Demo case for preview: people, needs and amounts are illustrative. The generated image does not depict actual beneficiaries. This is not a real donation request.\n\nThis example describes a small learning space with suitable tables and chairs, learning materials and storage. The beneficiary count is illustrative for testing the website.\n\nIllustrative budget\nFurniture: USD 2,400\nLearning materials: USD 1,200\nPreparation and transport: USD 1,200\n\nTotal: USD 4800.\n\nReplace this content with approved needs and budget before actual publication.",
+        "location": "Gaza Strip — illustrative location",
+        "meta_title": "Equipping a learning space | Emtedad preview",
+        "meta_description": "Basic equipment for a learning space welcoming children in groups. Demo case for preview."
+      }
+    ]
+  },
+  {
+    "seed_key": "community-activities",
+    "public_id": "43f4ed20-2e5e-4ca1-913a-000000000005",
+    "category_seed_key": "community",
+    "beneficiaries_count": 30,
+    "country_code": "PS",
+    "target_amount_minor": 180000,
+    "currency": "USD",
+    "priority": "normal",
+    "is_featured": true,
+    "asset": "community.png",
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "أنشطة للتواصل والتعلّم — نموذج تجريبي",
+        "slug": "demo-community-activities",
+        "summary": "برنامج تجريبي من ستة لقاءات مجتمعية للأنشطة والتعلّم المشترك. بيانات توضيحية.",
+        "story": "حالة تجريبية للمعاينة: الأشخاص والاحتياجات والمبالغ المذكورة توضيحية، والصورة مولّدة ولا تمثّل مستفيدين حقيقيين. ليست دعوة تبرع فعلية.\n\nيقدّم هذا المثال أنشطة جماعية ميسّرة، تتيح للمشاركين التعلّم والتعبير والتواصل في بيئة محترمة. لا يقدّم المثال خدمة علاجية أو نتائج نفسية مضمونة.\n\nتوزيع الميزانية التقديري\nتيسير 6 لقاءات: 900 دولار\nالمواد والأنشطة: 600 دولار\nالتنظيم والنقل: 300 دولار\n\nالمجموع: 1800 دولار أمريكي.\n\nتُستبدل هذه البيانات بالاحتياجات والميزانية المعتمدة قبل النشر الفعلي.",
+        "location": "قطاع غزة — موقع توضيحي",
+        "meta_title": "أنشطة للتواصل والتعلّم | معاينة امتداد",
+        "meta_description": "برنامج تجريبي من ستة لقاءات مجتمعية للأنشطة والتعلّم المشترك. حالة تجريبية للمعاينة."
+      },
+      {
+        "locale": "en",
+        "title": "Activities for connection and learning — demo",
+        "slug": "demo-community-activities",
+        "summary": "An illustrative six-session community activity and shared-learning program. Illustrative data.",
+        "story": "Demo case for preview: people, needs and amounts are illustrative. The generated image does not depict actual beneficiaries. This is not a real donation request.\n\nThis example offers facilitated group activities for learning, expression and connection in a respectful setting. It does not represent therapy or guaranteed psychological outcomes.\n\nIllustrative budget\nFacilitation of 6 sessions: USD 900\nMaterials and activities: USD 600\nCoordination and transport: USD 300\n\nTotal: USD 1800.\n\nReplace this content with approved needs and budget before actual publication.",
+        "location": "Gaza Strip — illustrative location",
+        "meta_title": "Activities for connection and learning | Emtedad preview",
+        "meta_description": "An illustrative six-session community activity and shared-learning program. Demo case for preview."
+      }
+    ]
+  },
+  {
+    "seed_key": "reading-corner",
+    "public_id": "43f4ed20-2e5e-4ca1-913a-000000000006",
+    "category_seed_key": "education",
+    "beneficiaries_count": 50,
+    "country_code": "PS",
+    "target_amount_minor": 150000,
+    "currency": "USD",
+    "priority": "normal",
+    "is_featured": true,
+    "asset": "education.png",
+    "translations": [
+      {
+        "locale": "ar",
+        "title": "ركن للقراءة والحكايات — نموذج تجريبي",
+        "slug": "demo-reading-corner",
+        "summary": "كتب قصصية ومواد قراءة مناسبة للأطفال ضمن مساحة تعليمية. بيانات توضيحية.",
+        "story": "حالة تجريبية للمعاينة: الأشخاص والاحتياجات والمبالغ المذكورة توضيحية، والصورة مولّدة ولا تمثّل مستفيدين حقيقيين. ليست دعوة تبرع فعلية.\n\nيساعد تنوّع الكتب والأنشطة القرائية في تقديم تجارب تعلّم محبّبة للأطفال. يوضح المثال تجهيز ركن للقراءة مع كتب ورفوف ومواد للأنشطة، دون نسبه إلى مشروع منفّذ.\n\nتوزيع الميزانية التقديري\nالكتب: 800 دولار\nالرفوف والتجهيز: 400 دولار\nمواد الأنشطة والنقل: 300 دولار\n\nالمجموع: 1500 دولار أمريكي.\n\nتُستبدل هذه البيانات بالاحتياجات والميزانية المعتمدة قبل النشر الفعلي.",
+        "location": "قطاع غزة — موقع توضيحي",
+        "meta_title": "ركن للقراءة والحكايات | معاينة امتداد",
+        "meta_description": "كتب قصصية ومواد قراءة مناسبة للأطفال ضمن مساحة تعليمية. حالة تجريبية للمعاينة."
+      },
+      {
+        "locale": "en",
+        "title": "A reading and storytelling corner — demo",
+        "slug": "demo-reading-corner",
+        "summary": "Storybooks and age-appropriate reading materials for a learning space. Illustrative data.",
+        "story": "Demo case for preview: people, needs and amounts are illustrative. The generated image does not depict actual beneficiaries. This is not a real donation request.\n\nA variety of books and reading activities can make learning engaging. This example equips a reading corner with books, shelving and activity supplies; it is not a claim about an implemented project.\n\nIllustrative budget\nBooks: USD 800\nShelving and setup: USD 400\nActivity materials and transport: USD 300\n\nTotal: USD 1500.\n\nReplace this content with approved needs and budget before actual publication.",
+        "location": "Gaza Strip — illustrative location",
+        "meta_title": "A reading and storytelling corner | Emtedad preview",
+        "meta_description": "Storybooks and age-appropriate reading materials for a learning space. Demo case for preview."
+      }
+    ]
+  }
+]
