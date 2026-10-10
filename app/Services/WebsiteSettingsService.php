@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class WebsiteSettingsService
@@ -53,7 +54,7 @@ class WebsiteSettingsService
             [
                 'group' => 'website',
                 'is_public' => true,
-                'value' => config('website.defaults'),
+                'value' => [],
             ],
         );
     }
@@ -75,7 +76,10 @@ class WebsiteSettingsService
                 ),
             );
 
-            $values['donations_enabled'] = (bool) $values['donations_enabled'];
+            foreach (['donations_enabled', 'gofundme_enabled', 'bank_transfer_enabled'] as $key) {
+                $values[$key] = (bool) $values[$key];
+            }
+            $this->validateSupport($values);
 
             $locked->value = array_replace($locked->value ?? [], $values);
             $locked->save();
@@ -103,6 +107,32 @@ class WebsiteSettingsService
 
             $this->translations->delete($setting, $locale);
         });
+    }
+
+    /**
+     * @param  array<string, mixed>  $values
+     */
+    private function validateSupport(array $values): void
+    {
+        $errors = [];
+        if ($values['gofundme_enabled'] && ! filled($values['gofundme_url'])) {
+            $errors['settings.gofundme_url'] = __('support.gofundme_required');
+        }
+        if ($values['bank_transfer_enabled']) {
+            foreach (['bank_name', 'bank_beneficiary_name'] as $key) {
+                if (! filled($values[$key])) {
+                    $errors['settings.'.$key] = __('support.bank_identity_required');
+                }
+            }
+            $hasAccount = collect(config('website.bank_currencies'))
+                ->contains(fn (string $currency): bool => filled($values['bank_iban_'.strtolower($currency)]));
+            if (! $hasAccount) {
+                $errors['settings.bank_iban_ils'] = __('support.account_required');
+            }
+        }
+        if ($errors) {
+            throw ValidationException::withMessages($errors);
+        }
     }
 
     public function image(string $asset, ?UploadedFile $image): Setting
