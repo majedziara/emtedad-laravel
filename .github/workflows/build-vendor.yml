@@ -1,0 +1,29 @@
+name: Build Laravel Vendor
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, curl, zip, fileinfo
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader --no-scripts
+
+      - name: Upload vendor artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: laravel-vendor
+          path: vendor/
+          retention-days: 7
